@@ -1,0 +1,7 @@
+# esquelet amb el texte que s'enviara
+# les linies que comencen amb # s'ignoraran
+# i la cadena '____' es substituira per un nom.
+
+bla bla bla
+
+# final

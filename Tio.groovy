@@ -6,21 +6,45 @@ public class Tio {
 	private String username
 	private String password
 
-	public void sendEmail() throws EmailException {
+	def debug
+	def esqueletTexte
+
+	def configura(String fitxerConfiguracio) {
+
+	}
+
+	def agafaLlistaParticipatns(String fitxerInfoParticipants) {
+	
+	}
+
+	def sendEmail(def username, def password, def recipient, def texte) throws EmailException {
 		Email email = new SimpleEmail();
 		email.setSmtpPort(587);
 		email.setAuthenticator(new DefaultAuthenticator(username, password));
-		email.setDebug(true);
+		email.setDebug(false);
 		email.setHostName("smtp.gmail.com");
 		email.setFrom("phlegias@gmail.com");
-		email.setSubject("TestMail");
-		email.setMsg("This is a test mail ... :-)");
-		email.addTo("marc.de.palol@gmail.com");
+		email.setSubject("[Tio] t'ha tocat...");
+		email.setMsg(texte)
+		email.addTo(recipient)
 		email.setTLS(true);
 		email.send();
 	}
 
+	def run() {
+		// agafar i enllaçar participants + comprovació
+
+		// per cada participant
+			// crear texte
+			// enviar e-mail	
+	}
+
 	static void main(String ...args) {
 		Tio t = new Tio()
+		// fitxer de configuracio
+		// fitxer amb la llista
+		// template del mail
+		// debug
+		t.run()
 	}
 }
