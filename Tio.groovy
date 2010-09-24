@@ -3,18 +3,19 @@ import org.apache.commons.mail.*;
 @Grab(group='org.apache.commons', module='commons-email', version='1.2')
 public class Tio {
 	
+	// username del mail
 	private String username
+	// password del mail
 	private String password
-
-	def debug
+	// esquelete del texte que s'enviara
 	def esqueletTexte
-
+	// mapa amb participant -> e-mail
 	def participants = [:]
 
-	def llegeixTemplate(String fitxerTemplate) {
-		esqueletTexte = new File(fitxerTemplate).getText()	
-	}
 
+	/**
+	 * Llegeix els valors de configuracio de l'email
+	 */
 	def configura(String fitxerConfiguracio) {
 		File conf = new File(fitxerConfiguracio)
 		conf.eachLine() {
@@ -33,6 +34,16 @@ public class Tio {
 		}
 	}
 
+	/**
+	 * Agafa el html del fitxer. Servira de template pel mail. 
+	 */
+	def llegeixTemplate(String fitxerTemplate) {
+		esqueletTexte = new File(fitxerTemplate).getText()	
+	}
+
+	/**
+	 * Llegeix la llista de participant \t e-mail
+	 */
 	def agafaLlistaParticipants(String fitxerInfoParticipants) {
 		File parti = new File(fitxerInfoParticipants) 
 		parti.eachLine() {
@@ -49,6 +60,9 @@ public class Tio {
 		println "Tenim: ${participants}"	
 	}
 
+	/**
+	 * Es connecta al servidor smtp i envia un e-mail
+	 */
 	def sendEmail(def username, def password, def recipient, def texte) throws EmailException {
 		Email email = new SimpleEmail();
 		email.setSmtpPort(587);
@@ -64,6 +78,18 @@ public class Tio {
 		println "Enviat e-mail a ${recipient}"
 	}
 
+	/**
+	 * Crea el cos del mail per un participant en concret. 
+	 */
+	def crearTexte(def regalador, def regalat) {
+		esqueletTexte.replaceAll("nom1", regalador).replaceAll("nom2",regalat)		
+	}
+
+
+	/**
+	 * Funcio principal, agafa i fa una barreja amb els participants, comprova que no estiguin repetits
+	 * i que la sortida té sentit.
+	 */
 	def ferSorteig() {
 		def regalats = participants.keySet().asList()
 		def regala = participants.keySet().asList()
@@ -96,6 +122,9 @@ public class Tio {
 		resultat
 	}
 
+	/**
+	 * Main
+	 */
 	def run() {
 		// agafar i enllaçar participants + comprovació
 		def mapaResultat = ferSorteig()
@@ -109,10 +138,6 @@ public class Tio {
 			// enviar e-mail	
 			sendEmail(username, password, participants[it.key] , texte) 
 		}
-	}
-
-	def crearTexte(def regalador, def regalat) {
-		esqueletTexte.replaceAll("nom1", regalador).replaceAll("nom2",regalat)		
 	}
 
 	static void main(String ...args) {
